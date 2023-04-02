@@ -1,0 +1,6 @@
+train: /content/dataset/images/train
+val: /content/dataset/images/valid
+test: /content/dataset/images/test
+
+nc: 13
+names: ["circle", "semicircle", "quartercircle", "triangle", "square", "rectangle", "trapezoid", "pentagon", "hexagon", "heptagon", "octagon", "star", "cross"]
