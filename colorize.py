@@ -1,9 +1,9 @@
 import os, cv2, random, sys, imutils
 import numpy as np
 
-shapes = ["circle", "semicircle", "quartercircle", "triangle", "square",
-          "rectangle", "trapezoid", "pentagon", "hexagon", "heptagon", "octagon", "star",
-          "cross"]
+shapes = ["circle", "semicircle", "quarter_circle", "triangle", "square",
+		  "rectangle", "trapezoid", "pentagon", "hexagon", "heptagon", "octagon", "star",
+		  "cross"]
 
 path = './finished_shapes_2/'
 #path = './chars/'
@@ -26,12 +26,6 @@ def colorify(img, scale):
 	grid += noise
 	grid = np.uint8(grid)
 
-	#grid = np.zeros(img.size).reshape(img.shape[0], img.shape[1], 3)
-
-	#random_g = random.randint(0, 255)
-	#random_b = random.randint(0, 255)
-	#random_r = random.randint(0, 255)
-
 	colored = np.where(img != [0,0,0])
 	miny = max(0, np.min(colored[0]) - 5)
 	maxy = min(new_height - 1, np.max(colored[0]) + 5)
@@ -46,14 +40,6 @@ def colorify(img, scale):
 	for i, py in enumerate(colored[0]):
 		px = colored[1][i]
 		img[py, px, :] = grid[py, px, :]
-		#random_add = random.randint(0, 100)
-		#random_add = 0
-		#img[py, px, 0] = random_g
-		#img[py, px, 0] = min(255, img[py, px, 0])
-		#img[py, px, 1] = random_b
-		#img[py, px, 1] = min(255, img[py, px, 1])
-		#img[py, px, 2] = random_r
-		#img[py, px, 2] = min(255, img[py, px, 2])
 
 	#breakpoint()
 	return img
@@ -107,12 +93,14 @@ for i in range(int(sys.argv[1])):
 	shape_files = os.listdir(shape_path)
 	letter_path = './chars/'
 	letter_files = os.listdir(letter_path)
-	annotation = ''
-
 	shape_f = random.choice(shape_files)
 	letter_f = random.choice(letter_files)
 
 	shape_name = shape_f[:shape_f.find('_')]
+	if shape_name == 'semicircle':
+		shape_name = 'semi_circle'
+	#breakpoint()
+
 	#print(shape_f, letter_f)
 	tilt = random.randint(0, 359)
 	shapeimg1 = imutils.rotate_bound(cv2.imread(shape_path + shape_f), tilt)
@@ -134,28 +122,6 @@ for i in range(int(sys.argv[1])):
 	starty = int(centery - 0.75 * height)
 	startx = int(centerx - 0.75 * width)
 	background_img = cv2.resize(background_img[starty : starty + max_dim, startx : startx + max_dim, :], (50, 50))
-
-	#cv2.imshow('Superimposition', final)
-	#cv2.waitKey(0)
-	finished_folder = f'./dataset/{sys.argv[2]}/'
-	#cv2.imwrite(f'./dataset/images/{sys.argv[2]}/' + str(i) + '.png', background_img, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
-	annotation += f'{shapes.index(shape_name)} 0.5 0.5 0.4 0.4\n'
-	cv2.imwrite(f'./dataset/images/{sys.argv[2]}/' + str(i) + '.png', background_img)
-
-	h = open(f'./dataset/labels/{sys.argv[2]}/' + str(i) + '.txt', 'w')
-	h.write(annotation)
-	h.close()
-
-"""
-for file in folder:
-	if 'png' not in file and 'jpg' not in file: continue
-	#if 'triangle' not in file and 'circle' not in file: continue
-	fname = path + file
-	print(fname)
-	img = cv2.imread(fname)
-
-	img = colorify(img, 2)
-	cv2.imshow(file, img)
-	cv2.waitKey(500)
-	cv2.destroyAllWindows()
-"""
+	final_path = f'./dataset/{sys.argv[2]}/' + shape_name + '/' + str(i) + '.png'
+	print(final_path)
+	cv2.imwrite(final_path, background_img)

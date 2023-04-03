@@ -3,10 +3,10 @@ import os
 path = './dataset/'
 
 folders = ['train/', 'valid/', 'test/']
-sub_directories = ['images/', 'labels/']
+shapes = ["circle", "semicircle", "quarter_circle", "triangle", "square", "rectangle", "trapezoid", "pentagon", "hexagon", "heptagon", "octagon", "star", "cross"]
+#sub_directories = ['images/', 'labels/']
 
-count = 0
-for dir in sub_directories:
-    os.mkdir(path + dir)
-    for folder in folders:
-        os.mkdir(path + dir + folder)
+for folder in folders:
+    os.mkdir(path + folder)
+    for shape in shapes:
+        os.mkdir(path + folder + shape)

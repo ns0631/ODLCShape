@@ -120,8 +120,6 @@ if '.DS_Store' in font_list:
 def main():
     global count
     #base_number = int(sys.argv[1]) + 1
-    img_dir = f'../dataset/images/{sys.argv[2]}/'
-    base_number = len(os.listdir(img_dir)) + 1
     GEN = int(sys.argv[1])
     for i in range(GEN):
         # Get image attributes, resize
@@ -136,17 +134,17 @@ def main():
         background_handle = ImageDraw.Draw(background)
         draw_handle = ImageDraw.Draw(image)
 
-        name = str(base_number + i) + ".jpg"
         center = [ width // 2, height // 2 ]
-
-        img_path = f'../dataset/images/{sys.argv[2]}/' + name
-        annotation_path = f'../dataset/labels/{sys.argv[2]}/' + name[:-3] + 'txt'
-
-        annotation = open(annotation_path, 'w')
+        #annotation = open(annotation_path, 'w')
 
         shape = generate([], image, center)
         text_corners = draw(image, draw_handle, shape, shape.shape_color, shape.text_color, shape.shape_color)
-        annotation_path = annotation_path[:-3] + 'txt'
+        img_dir = f'../dataset/{sys.argv[2]}/{shape.shape_name}/'
+        base_number = len(os.listdir(img_dir)) + 1
+        name = str(base_number + i) + ".png"
+
+        img_path = f'../dataset/{sys.argv[2]}/{shape.shape_name}/' + name
+        annotation_path = f'../dataset/labels/{sys.argv[2]}/' + name[:-3] + 'txt'
 
         shape_corners = {'min_x': shape.min_x - 20, 'min_y': shape.min_y - 20, 'max_x': shape.max_x + 20, 'max_y': shape.max_y + 20}
         relative_center_x = ( ( shape_corners['max_x'] + shape_corners['min_x'] ) / 2 ) / width
@@ -154,12 +152,13 @@ def main():
         relative_width = ( shape_corners['max_x'] - shape_corners['min_x'] ) / width
         relative_height = ( shape_corners['max_y'] - shape_corners['min_y'] ) / height
 
-        annotation.write(f'{shapes.index(shape.shape_name)} 0.5 0.5 0.4 0.4\n')
+        #annotation.write(f'{shapes.index(shape.shape_name)} 0.5 0.5 0.4 0.4\n')
 
         #annotation.write(f'0 {relative_center_x} {relative_center_y} {1.5 * relative_width} {1.5 * relative_height}\n')
         image = image.crop((shape_corners['min_x'], shape_corners['min_y'], shape_corners['max_x'], shape_corners['max_y'])).resize((80, 80))
-        image.save(img_path, 'JPEG')
-        annotation.close()
+        image.save(img_path, 'PNG')
+        print(img_path)
+        #annotation.close()
 
         #print(img_path)
 
