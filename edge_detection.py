@@ -28,11 +28,12 @@ def floodfill(image, startx, starty):
 
     return area
 
-paths = ['./dataset/images/test/', './dataset/images/train/', './dataset/images/valid/']
+#paths = ['./dataset/images/test/', './dataset/images/train/', './dataset/images/valid/']
+paths = ['./finished_shapes_2/']#['./darkened_shapes/']
 fpaths = list()
 for path in paths:
     fpaths += glob.glob(path + '*.png') + glob.glob(path + '*.jpg')
-
+#breakpoint()
 for fpath in fpaths:
     img = cv2.imread(fpath)
     #fname = './backgroundremoval_tool/IMG_1522.png'
@@ -49,5 +50,8 @@ for fpath in fpaths:
     r4 = floodfill(img, width - 1, height - 1)
 
     bgr_img = cv2.cvtColor(np.float32(grid), cv2.COLOR_GRAY2BGR)
-    cv2.imwrite(fpath[:fpath.find('_')] + fpath[-4:], bgr_img)
-    os.remove(fpath)
+    #breakpoint()
+    #cv2.imwrite(fpath[:fpath.find('_')] + fpath[-4:], bgr_img)
+    cv2.imwrite(fpath[:-4] + '_modified.png', bgr_img)
+    print(fpath[:-4] + '_modified.png')
+    #os.remove(fpath)
